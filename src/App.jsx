@@ -5,6 +5,7 @@ import "./App.css";
 
 import HomePage from "./components/Home";
 import GamePage from "./components/Game";
+import ProfilePage from "./components/Profile";
 
 function App() {
   // return <HomePage />;
@@ -14,7 +15,10 @@ function App() {
         <Route path="/game" element={<GamePage />} />
       </Routes>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
+      </Routes>
+      <Routes>
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   );

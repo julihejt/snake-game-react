@@ -121,7 +121,9 @@ body {
   text-align: center;
   padding: 20px;
   border-radius: 10px;
-  display: none; /* Initially hidden */
+  display: flex; /* Ensure it is visible */
+  flex-direction: column;
+  align-items: center;
 }
 
 #game-over-screen h2 {
@@ -134,18 +136,18 @@ body {
   font-size: 24px;
 }
 
-#restart-button {
-  background-color: #d8ddca;
-  color: #414141;
-  border: none;
+#game-over-screen button {
+  background-color: #4caf50;
+  color: white;
   padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
-  font-family: "VT323", monospace;
-  font-size: 24px;
 }
 
-#restart-button:hover {
-  background-color: #abb78a;
+#game-over-screen button:hover {
+  background-color: #45a049;
 }
 
 /* Score Update Animation */
@@ -369,4 +371,37 @@ body {
   width: 40px; /* Adjust the size of the profile icon */
   height: 40px;
   cursor: pointer; /* Make the icon clickable */
+}
+
+.profile-container {
+  background-color: #c2c29c;
+  border: 10px solid #7a7a5c;
+  padding: 20px;
+  text-align: center;
+  width: 300px;
+  border-radius: 10px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+  font-size: 20px;
+  color: black;
+}
+
+.username {
+  font-size: 16px;
+  color: black;
+  margin-bottom: 10px;
+}
+
+.highscores {
+  font-size: 14px;
+  color: black;
+  text-align: left;
+  margin-top: 10px;
+}
+
+.highscores li {
+  list-style: none;
+  padding: 5px 0;
 }

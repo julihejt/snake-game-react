@@ -10,10 +10,12 @@ export default function Game() {
   const [snake, setSnake] = useState([{ x: 10, y: 10 }]);
   const [gameSpeedDelay, setGameSpeedDelay] = useState(200);
   const [food, setFood] = useState(null);
+  const [isGameOver, setIsGameOver] = useState(false); // Track if game is over
 
   const increaseSpeed = () => {
-    if (gameSpeedDelay > 50) {
-      const newSpeed = gameSpeedDelay - 10;
+    // Increase speed every 3 points, and reduce speed by 15ms, but don't go below 100ms.
+    if (snake.length % 3 === 0 && gameSpeedDelay > 100) {
+      const newSpeed = gameSpeedDelay - 15;
       setGameSpeedDelay(newSpeed);
     }
   };
@@ -35,16 +37,14 @@ export default function Game() {
     return newFoodPosition;
   };
 
-  const checkCollision = () => {
-    const head = snake[0];
-    console.log(head);
+  const checkCollision = (newSnake) => {
+    const head = newSnake[0];
     if (head.x < 0 || head.y < 0 || head.x >= gridSize || head.y >= gridSize) {
       gameOver();
       return;
     }
-
-    for (let i = 1; i < snake.length; i++) {
-      if (head.x === snake[i].x && head.y === snake[i].y) {
+    for (let i = 1; i < newSnake.length; i++) {
+      if (head.x === newSnake[i].x && head.y === newSnake[i].y) {
         gameOver();
         return;
       }
@@ -52,9 +52,10 @@ export default function Game() {
   };
 
   const gameOver = () => {
+    console.log("Game Over triggered"); // Debugging message
     if (gameInterval) clearInterval(gameInterval);
     setGameStarted(false);
-    alert("Game Over!");
+    setIsGameOver(true); // Make sure the state updates to show game over screen
 
     if (snake.length > highScore) {
       setHighScore(snake.length);
@@ -64,13 +65,10 @@ export default function Game() {
     setDirection("right");
     setGameSpeedDelay(200);
   };
-  console.log(snake);
 
   const move = () => {
     setSnake((prevSnake) => {
       const head = { ...prevSnake[0] };
-      debugger;
-
       switch (direction) {
         case "up":
           head.y--;
@@ -85,23 +83,25 @@ export default function Game() {
           head.x++;
           break;
       }
-
       const newSnake = [head, ...prevSnake];
-
       if (food && head.x === food.x && head.y === food.y) {
         setFood(generateFood());
         increaseSpeed();
       } else {
         newSnake.pop();
       }
-
+      checkCollision(newSnake);
       return newSnake;
     });
-    checkCollision();
   };
 
   const startGame = () => {
+    console.log("Game Started"); // Debugging message
     setGameStarted(true);
+    setIsGameOver(false); // Hide game over screen
+    setSnake([{ x: 10, y: 10 }]);
+    setDirection("right");
+    setGameSpeedDelay(200);
     setFood(generateFood());
 
     if (gameInterval) clearInterval(gameInterval);
@@ -153,8 +153,12 @@ export default function Game() {
 
   return (
     <div id="game-container" className="game-container">
-      {!gameStarted && (
+      {!gameStarted && !isGameOver && (
         <img id="logo" src="./src/img/snakeLogo.png" alt="snake-logo" />
+      )}
+
+      {!gameStarted && !isGameOver && (
+        <h1 id="instruction-text">Press space bar to start the game</h1>
       )}
 
       <div className="profile-icon" id="profile-icon">
@@ -163,7 +167,7 @@ export default function Game() {
 
       <div>
         <div className="scores">
-          <h1>Score: {snake.length}</h1>
+          <h1>Score: {snake.length + 1}</h1>
           <h1>HighScore: {highScore}</h1>
         </div>
         <div className="game-border-1">
@@ -191,14 +195,17 @@ export default function Game() {
                   ></div>
                 )}
               </div>
+              {isGameOver && (
+                <div id="game-over-screen" className="game-over">
+                  <h2>Game Over</h2>
+                  <p>Your Score: {snake.length}</p>
+                  <button onClick={startGame}>Restart</button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
-
-      {!gameStarted && (
-        <h1 id="instruction-text">Press space bar to start the game</h1>
-      )}
 
       <footer id="footer">Developed by Julie Hejtmanek</footer>
     </div>
