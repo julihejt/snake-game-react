@@ -13,11 +13,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/game" element={<GamePage />} />
-      </Routes>
-      <Routes>
-        <Route path="/home" element={<HomePage />} />
-      </Routes>
-      <Routes>
+        <Route path="/" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
