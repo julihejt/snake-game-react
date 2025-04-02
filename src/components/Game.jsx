@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./../App.css"; // Import the CSS
 
 const gridSize = 20;
 
@@ -10,13 +11,17 @@ export default function Game() {
   const [snake, setSnake] = useState([{ x: 10, y: 10 }]);
   const [gameSpeedDelay, setGameSpeedDelay] = useState(200);
   const [food, setFood] = useState(null);
-  const [isGameOver, setIsGameOver] = useState(false); // Track if game is over
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    setIsGuest(urlParams.get("guest") === "true");
+  }, []);
 
   const increaseSpeed = () => {
-    // Increase speed every 3 points, and reduce speed by 15ms, but don't go below 100ms.
     if (snake.length % 3 === 0 && gameSpeedDelay > 100) {
-      const newSpeed = gameSpeedDelay - 15;
-      setGameSpeedDelay(newSpeed);
+      setGameSpeedDelay(gameSpeedDelay - 15);
     }
   };
 
@@ -52,18 +57,13 @@ export default function Game() {
   };
 
   const gameOver = () => {
-    console.log("Game Over triggered"); // Debugging message
     if (gameInterval) clearInterval(gameInterval);
     setGameStarted(false);
-    setIsGameOver(true); // Make sure the state updates to show game over screen
+    setIsGameOver(true);
 
-    if (snake.length > highScore) {
-      setHighScore(snake.length);
+    if (snake.length - 1 > highScore) {
+      setHighScore(snake.length - 1);
     }
-
-    setSnake([{ x: 10, y: 10 }]);
-    setDirection("right");
-    setGameSpeedDelay(200);
   };
 
   const move = () => {
@@ -96,9 +96,8 @@ export default function Game() {
   };
 
   const startGame = () => {
-    console.log("Game Started"); // Debugging message
     setGameStarted(true);
-    setIsGameOver(false); // Hide game over screen
+    setIsGameOver(false);
     setSnake([{ x: 10, y: 10 }]);
     setDirection("right");
     setGameSpeedDelay(200);
@@ -128,6 +127,13 @@ export default function Game() {
           break;
       }
     }
+  };
+
+  const handleLogout = () => {
+    // Handle the logout logic, e.g., redirect to a login page or clear session
+    alert("Logging out...");
+    // For now, just redirect to the home page
+    window.location.href = "/";
   };
 
   useEffect(() => {
@@ -161,13 +167,28 @@ export default function Game() {
         <h1 id="instruction-text">Press space bar to start the game</h1>
       )}
 
-      <div className="profile-icon" id="profile-icon">
-        <img src="./src/img/profileIcon.png" alt="Profile Icon" />
-      </div>
+      {!isGuest && (
+        <div id="buttons-container" className="buttons-container">
+          <button
+            className="profile-button"
+            onClick={() => (window.location.href = "/profile")}
+          >
+            <img src="./src/img/profileIcon.png" alt="Profile Icon" />
+          </button>
+
+          <button
+            id="logout-btn"
+            className="logout-button"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </div>
+      )}
 
       <div>
         <div className="scores">
-          <h1>Score: {snake.length + 1}</h1>
+          <h1>Score: {snake.length - 1}</h1>
           <h1>HighScore: {highScore}</h1>
         </div>
         <div className="game-border-1">
@@ -198,7 +219,7 @@ export default function Game() {
               {isGameOver && (
                 <div id="game-over-screen" className="game-over">
                   <h2>Game Over</h2>
-                  <p>Your Score: {snake.length}</p>
+                  <p>Your Score: {snake.length - 1}</p>
                   <button onClick={startGame}>Restart</button>
                 </div>
               )}

@@ -199,11 +199,6 @@ body {
   }
 }
 
-/* Landing Page Styles */
-.landing-page {
-  text-align: center;
-}
-
 .options button {
   margin: 10px;
   padding: 10px 20px;
@@ -242,11 +237,26 @@ body {
   background-color: #abb78a;
 }
 
-#logout-btn {
+.buttons-container {
   position: absolute;
   top: 10px;
   right: 10px;
-  display: none; /* Initially hidden */
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.top-right-buttons {
+  position: fixed; /* Keeps it in the top-right corner */
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between buttons */
+  z-index: 1000; /* Ensures visibility above other content */
+}
+
+#logout-btn {
   padding: 8px 12px;
   background-color: #ff4d4d;
   color: white;
@@ -359,49 +369,122 @@ body {
   background-color: #b8b8b8; /* Slightly darker on hover */
 }
 
-/* Position the profile icon in the top-right corner */
-.profile-icon {
-  position: fixed;
-  top: 5px;
-  right: 100px;
-  z-index: 1000; /* Ensure it stays above other elements */
+.profile-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 
-.profile-icon img {
-  width: 40px; /* Adjust the size of the profile icon */
+.profile-button img {
+  width: 40px;
   height: 40px;
-  cursor: pointer; /* Make the icon clickable */
+  border-radius: 50%;
+  transition: transform 0.2s;
 }
 
+.profile-button:hover img {
+  transform: scale(1.1);
+}
+
+/* Ensure the page matches the game theme */
 .profile-container {
-  background-color: #c2c29c;
-  border: 10px solid #7a7a5c;
+  width: 450px; /* Similar to the game board */
+  background: #414141; /* Same dark gray background */
+  border: 10px solid #8b966c; /* Match game-border-3 */
+  border-radius: 20px; /* Similar rounded corners */
   padding: 20px;
   text-align: center;
-  width: 300px;
-  border-radius: 10px;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+  color: #d8ddca; /* Highscore text color */
+  font-family: "VT323", monospace; /* Consistent game font */
+  box-shadow: inset 0 0 10px #595f43;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-h1 {
-  font-size: 20px;
-  color: black;
+/* Profile Header */
+.profile-container h1 {
+  font-size: 40px;
+  color: #abb78a; /* Score color */
+  text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.5);
 }
 
+/* Username Style */
 .username {
-  font-size: 16px;
-  color: black;
-  margin-bottom: 10px;
+  font-size: 30px;
+  color: #d8ddca;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
+/* Highscores Section */
 .highscores {
-  font-size: 14px;
-  color: black;
-  text-align: left;
-  margin-top: 10px;
+  font-size: 24px;
+  color: #abb78a;
+  margin-top: 20px;
+  padding: 15px;
+  border-top: 2px solid #abb78a;
+}
+
+.highscores ul {
+  padding: 0;
+  list-style: none;
 }
 
 .highscores li {
-  list-style: none;
-  padding: 5px 0;
+  background: rgba(255, 255, 255, 0.1); /* Light transparency */
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 8px;
+  font-size: 22px;
+  border: 2px solid #8b966c;
+}
+
+/* Add hover effect */
+.highscores li:hover {
+  background: rgba(171, 183, 138, 0.5);
+  transform: scale(1.05);
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.profile-header {
+  position: relative;
+  width: 100%;
+}
+
+.profile-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.profile-button img {
+  width: 50px; /* Adjust size */
+  height: 50px;
+  transition: transform 0.2s;
+}
+
+.profile-button:hover img {
+  transform: scale(1.1);
+}
+
+.game-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.game-button img {
+  width: 50px; /* Adjust size */
+  height: 50px;
+  transition: transform 0.2s;
+}
+
+.game-button:hover img {
+  transform: scale(1.1);
 }

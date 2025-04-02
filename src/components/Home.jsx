@@ -30,7 +30,12 @@ export default function Home() {
         <button id="register-btn" onClick={() => setActiveModal("register")}>
           Register
         </button>
-        <button id="guest-btn">Continue as Guest</button>
+        <button
+          id="guest-btn"
+          onClick={() => (window.location.href = "/game?guest=true")}
+        >
+          Continue as Guest
+        </button>
       </div>
 
       <Modal
