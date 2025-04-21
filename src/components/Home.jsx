@@ -1,23 +1,42 @@
 import { useState } from "react";
 import Modal from "./Modal";
+import { loginUser, registerUser } from "../api"; // Make sure the path to api.js is correct
 
 export default function Home() {
   const [activeModal, setActiveModal] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    // Add your login logic here
-    console.log("Logging in with", username, password);
-    // Navigate to the game page
-    window.location.href = "/game";
+  const handleLogin = async () => {
+    try {
+      const res = await loginUser(username, password);
+      console.log("Login response:", res);
+      if (res.success || res.token || res.message === "Login successful") {
+        // Store token or user info if needed
+        window.location.href = "/game";
+      } else {
+        alert("Login failed: " + (res.message || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Error logging in.");
+    }
   };
 
-  const handleRegister = () => {
-    // Add your registration logic here
-    console.log("Registering with", username, password);
-    // Close the modal after registration
-    setActiveModal(null);
+  const handleRegister = async () => {
+    try {
+      const res = await registerUser(username, password);
+      console.log("Register response:", res);
+      if (res.success || res.message === "User registered successfully") {
+        alert("Registration successful! You can now log in.");
+        setActiveModal(null);
+      } else {
+        alert("Registration failed: " + (res.message || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      alert("Error registering.");
+    }
   };
 
   return (
