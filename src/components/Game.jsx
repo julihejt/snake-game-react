@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import "./../App.css"; // Import the CSS
+import { submitHighScore } from "../../Api"; // NEW: Import the API function
+import "./../App.css";
 
 const gridSize = 20;
 
@@ -61,8 +62,19 @@ export default function Game() {
     setGameStarted(false);
     setIsGameOver(true);
 
-    if (snake.length - 1 > highScore) {
-      setHighScore(snake.length - 1);
+    const finalScore = snake.length - 1;
+
+    if (finalScore > highScore) {
+      setHighScore(finalScore);
+    }
+
+    if (!isGuest) {
+      const username = localStorage.getItem("username");
+      if (username) {
+        submitHighScore(username, finalScore)
+          .then((res) => console.log("Score submitted:", res))
+          .catch((err) => console.error("Failed to submit score:", err));
+      }
     }
   };
 
@@ -130,9 +142,8 @@ export default function Game() {
   };
 
   const handleLogout = () => {
-    // Handle the logout logic, e.g., redirect to a login page or clear session
-    alert("Logging out...");
-    // For now, just redirect to the home page
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
     window.location.href = "/";
   };
 

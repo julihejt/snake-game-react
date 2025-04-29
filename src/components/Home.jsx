@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Modal from "./Modal";
-import { loginUser, registerUser } from "../api"; // Make sure the path to api.js is correct
+import { loginUser, registerUser } from "../../Api"; // Make sure this path is correct
 
 export default function Home() {
   const [activeModal, setActiveModal] = useState(null);
@@ -11,8 +11,13 @@ export default function Home() {
     try {
       const res = await loginUser(username, password);
       console.log("Login response:", res);
+
       if (res.success || res.token || res.message === "Login successful") {
-        // Store token or user info if needed
+        // ✅ Store token and username in localStorage
+        localStorage.setItem("token", res.token);
+        localStorage.setItem("username", username);
+
+        // Redirect to game or profile
         window.location.href = "/game";
       } else {
         alert("Login failed: " + (res.message || "Unknown error"));
@@ -27,9 +32,10 @@ export default function Home() {
     try {
       const res = await registerUser(username, password);
       console.log("Register response:", res);
+
       if (res.success || res.message === "User registered successfully") {
         alert("Registration successful! You can now log in.");
-        setActiveModal(null);
+        setActiveModal(null); // Close the modal
       } else {
         alert("Registration failed: " + (res.message || "Unknown error"));
       }
@@ -57,6 +63,7 @@ export default function Home() {
         </button>
       </div>
 
+      {/* Login Modal */}
       <Modal
         title="Login"
         buttonText="Login"
@@ -79,6 +86,7 @@ export default function Home() {
         />
       </Modal>
 
+      {/* Register Modal */}
       <Modal
         title="Register"
         buttonText="Submit"

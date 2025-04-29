@@ -1,15 +1,44 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getMyHighScores } from "../../Api";
 import "./../App.css";
 
-const Profile = ({ username, highscores = [] }) => {
+const Profile = () => {
+  const [highscores, setHighscores] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) setUsername(storedUsername);
+
+    if (!token) {
+      console.warn("No token found");
+      setLoading(false);
+      return;
+    }
+
+    getMyHighScores(token)
+      .then((data) => {
+        console.log("Fetched scores:", data); // ADD THIS
+        setHighscores(data.scores || []);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch highscores:", err);
+        setLoading(false);
+      });
+  }, []);
+
   const handleLogout = () => {
-    alert("Logging out...");
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
     window.location.href = "/";
   };
 
   return (
     <div className="profile-container">
-      {/* Container to align buttons side by side */}
       <div className="top-right-buttons">
         <button
           id="logout-btn"
@@ -30,17 +59,19 @@ const Profile = ({ username, highscores = [] }) => {
 
       <div className="highscores">
         <h2>Highscores</h2>
-        <ul>
-          {highscores.length > 0 ? (
-            highscores.map((score, index) => (
+        {loading ? (
+          <p>Loading...</p>
+        ) : highscores.length > 0 ? (
+          <ul>
+            {highscores.map((score, index) => (
               <li key={index}>
-                {index + 1}. {score}
+                {index + 1}. {score.score}
               </li>
-            ))
-          ) : (
-            <li>No highscores available</li>
-          )}
-        </ul>
+            ))}
+          </ul>
+        ) : (
+          <p>No highscores available</p>
+        )}
       </div>
     </div>
   );
