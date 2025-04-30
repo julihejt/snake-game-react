@@ -33,7 +33,7 @@ export default function Home() {
       const res = await registerUser(username, password);
       console.log("Register response:", res);
 
-      if (res.success || res.message === "User registered successfully") {
+      if (res.success || res.message === "User created successfully") {
         alert("Registration successful! You can now log in.");
         setActiveModal(null); // Close the modal
       } else {
