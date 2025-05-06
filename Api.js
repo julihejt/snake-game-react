@@ -24,9 +24,14 @@ export async function loginUser(username, password) {
 
 // Submit a high score
 export async function submitHighScore(username, score) {
+  const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+
   const response = await fetch(`${API_BASE}/api/scores/highscores`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // Send the token with the request
+    },
     body: JSON.stringify({ username, score }),
   });
 
@@ -34,14 +39,17 @@ export async function submitHighScore(username, score) {
 }
 
 // Get all highscores for the logged-in user
-export async function getMyHighScores(token) {
+export async function getMyHighScores() {
+  const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+
   const response = await fetch(`${API_BASE}/api/scores/my-scores`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`, // Send the token with the request
     },
   });
+
   return response.json();
 }
 

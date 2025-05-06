@@ -67,16 +67,18 @@ export default function Game() {
     if (finalScore > highScore) {
       setHighScore(finalScore);
     }
+  };
 
-    if (!isGuest) {
+  useEffect(() => {
+    if (!isGuest && isGameOver) {
       const username = localStorage.getItem("username");
       if (username) {
-        submitHighScore(username, finalScore)
+        submitHighScore(username, snake.length - 1)
           .then((res) => console.log("Score submitted:", res))
           .catch((err) => console.error("Failed to submit score:", err));
       }
     }
-  };
+  }, [isGameOver]);
 
   const move = () => {
     setSnake((prevSnake) => {
